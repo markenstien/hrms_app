@@ -27,6 +27,8 @@ class _PayslipViewState extends State<PayslipView> {
     var bonusListString = getPayslipData('bonus_notes');
     var deductionString  = getPayslipData('deduction_notes');
 
+    print(widget.payslipData);
+
     if(bonusListString.isNotEmpty) {
       var bonusListExtracted = jsonDecode(bonusListString);
       var total = 0.0;
@@ -41,7 +43,7 @@ class _PayslipViewState extends State<PayslipView> {
     }
 
     if(deductionString.isNotEmpty) {
-      var deductionExtracted = jsonDecode(bonusListString);
+      var deductionExtracted = jsonDecode(deductionString);
       var total = 0.0;
       for(var i = 0 ; i < deductionExtracted.length; i++) {
         total += double.parse(deductionExtracted[i]['amount']);
@@ -51,11 +53,6 @@ class _PayslipViewState extends State<PayslipView> {
         totalDeduction = total;
       });
     }
-
-    print([
-      deductionList.length,
-      bonusList.length
-    ]);
   }
   @override
   Widget build(BuildContext context) {
@@ -124,20 +121,6 @@ class _PayslipViewState extends State<PayslipView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Deductions', style: TextStyle(fontSize: 35, fontWeight: FontWeight.w300),),
-                    if(deductionList.length > 0)
-                      ListView.builder(
-                          itemCount: deductionList.length,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, position) {
-                            var item = deductionList[position];
-                            return ListTile(
-                              leading: Text('${item['code']}|${item['name']}',  style: particulars(),),
-                              trailing: Text(item['amount'], style: particulars(),),
-                            );
-                          })
-                    else
-                      Text('No Deductions'),
                     ListTile(
                       leading: Text('Total',  style: subTitle(),),
                       trailing: Text("$totalDeduction", style: subTitle(),),
